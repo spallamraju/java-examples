@@ -1,7 +1,10 @@
+package com.test.demo.test;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class HighestFrequencyNumber {
@@ -18,13 +21,23 @@ public class HighestFrequencyNumber {
 	 */
 	private static void findHighestFreqNumber(List<Integer> numbers) {
 		
-		Map<Integer, Long> collect = numbers.stream().collect(Collectors.groupingBy(c -> c, Collectors.counting()));
-		System.out.println("Number Freq: "+collect);
-		// Find maximum nth number and whose frequency is same as nth Number.
+		Map<Integer, Long> frequencyMap = numbers.stream().collect(Collectors.groupingBy(c -> c, Collectors.counting()));
+		System.out.println("Number Freq: "+frequencyMap);
+		// Find maximum nth number and whose value matches the frequency.
 		// Eg: 1=4, 2=2, 3=3, 4=5, 6=6
 		// 2=2, 3=3, 6=6, so maximum is 6, it should print result as 6
-		Integer maxValu = collect.entrySet().stream().filter(e -> Long.valueOf(e.getKey()).equals(e.getValue())).max(Comparator.comparing(Map.Entry :: getKey)).get().getKey();
-		System.out.println("Max Value: "+maxValu);
+		// Integer maxValu = frequencyMap.entrySet().stream().filter(e -> Long.valueOf(e.getKey()).equals(e.getValue())).max(Comparator.comparing(Map.Entry :: getKey)).get().getKey();
+		// System.out.println("Max Value: "+maxValu);
+		Optional<Integer> result = frequencyMap.entrySet().stream()
+		.filter(e -> e.getKey().equals(e.getValue().intValue())) // compared as int
+		.max(Comparator.comparing(Map.Entry :: getKey))
+		.map(Map.Entry :: getKey);
+		
+		if (result.isEmpty()) {
+			System.out.println("Max Value: "+result.get());
+		} else {
+			System.out.println("No number found where value matches frequency!");
+		}
 	}
 
 }
